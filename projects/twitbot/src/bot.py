@@ -4,6 +4,9 @@ import tweepy
 from keys import keys
 from pprint import pprint
 import time
+from random import randint
+import os
+
 
 CONSUMER_KEY = keys['consumer_key']
 CONSUMER_SECRET = keys['consumer_secret']
@@ -22,7 +25,7 @@ def connect():
 def search():
 	global api
 	twts = api.search(q="Hello World!")
-	pprint(twts[0])
+	#pprint(twts[0])
 	print "*"*80
 	print twts[0].text
 	# for t in twts:
@@ -41,15 +44,36 @@ def tweetforever():
 	f=filename.readlines()
 	filename.close()
 
-	for line in f:
-	     api.update_status(line)
-	     print line
-	     time.sleep(3600) # Sleep for 1 hour
+	#print "number of lines: ", len(f)
+	#print f[:2]
+	#print f[9]
+
+	mn = 0
+	mx = len(f)-1
+	idx = randint(mn, mx)
+	mytweet = f[idx]
+	print mytweet
+
+	mypic = "images/{0}.jpg".format( randint(0,696) )
+
+	print mypic
+
+	#api.update_status(status= mytweet)
+
+	api.update_with_media(filename=mypic,status= mytweet, lat=63.631050 , long=-19.607225)
+
+	# for line in f:
+	#      api.update_status(status=line)
+	#      print line
+	#      time.sleep(1800) # Sleep for 30 mintues
 
 def main():
 	connect()
-	search()
-	mentions()
+	while 1:
+		tweetforever()
+		time.sleep( randint(500, 3600))
+	#search()
+	#mentions()
 
 if __name__ == "__main__":
 	main()
