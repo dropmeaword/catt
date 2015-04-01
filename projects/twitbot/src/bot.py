@@ -4,6 +4,7 @@ import tweepy
 from keys import keys
 from pprint import pprint
 import time
+import random
 
 CONSUMER_KEY = keys['consumer_key']
 CONSUMER_SECRET = keys['consumer_secret']
@@ -11,6 +12,7 @@ ACCESS_TOKEN = keys['access_token']
 ACCESS_TOKEN_SECRET = keys['access_token_secret']
 
 api = None
+ANSWERS = None
 
 def connect():
 	global api
@@ -21,7 +23,8 @@ def connect():
 
 def search():
 	global api
-	twts = api.search(q="Hello World!")
+	#Here you can change the word
+	twts = api.search(q="school")
 	pprint(twts[0])
 	print "*"*80
 	print twts[0].text
@@ -59,8 +62,44 @@ def get_answer():
 
 def main():
 	connect()
-	search()
-	mentions()
+	#tweetforever()
+	#search()
+	#mentions()
+	# this is a comment
+	#api.update_status("I will start doing something now")
+	load_my_answers()
+
+	while 1:
+		try:
+			mentions = api.mentions_timeline()
+			if mentions:
+				#print "We have been mentioned! "
+				for m in mentions:
+					# print "*"*80
+					# print m.text
+					# print "^"*80
+					# print m.author.name
+					# print "%"*80
+					# print m.author.screen_name
+					# print "@"*80
+					# print "answer: ", get_answer()
+					# print "@"*80
+
+					answer = "@{0} {1}".format(m.author.screen_name, get_answer())
+					api.update_status(status=(answer)) #, m.id)
+					# TODO:
+					# use tweepy to reply to a mention using get_answer()
+			else:
+				print "we haven't been mentioned  :("
+		except Exception, e:
+			continue
+
+		time.sleep(1)
+
 
 if __name__ == "__main__":
-	main()
+	print "Press Ctrl-C to stop bot from messing on twitter..."
+	try:
+		main()
+	except KeyboardInterrupt, e:
+		pass
