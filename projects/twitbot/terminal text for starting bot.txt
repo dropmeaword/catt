@@ -1,0 +1,2 @@
+$ cd <dir>
+$ python bot.py

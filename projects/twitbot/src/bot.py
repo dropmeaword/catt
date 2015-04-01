@@ -42,9 +42,20 @@ def tweetforever():
 	filename.close()
 
 	for line in f:
-	     api.update_status(line)
-	     print line
-	     time.sleep(3600) # Sleep for 1 hour
+		api.update_status(status=(line))
+	    #api.update_status(line)
+		print line
+		time.sleep(3600) # Sleep for 1 hour
+
+def load_my_answers():
+	global ANSWERS
+	f=open('eightball.txt','r')
+	ANSWERS=f.readlines()
+	f.close()
+	#print ANSWERS
+
+def get_answer():
+	return random.choice(ANSWERS)
 
 def main():
 	connect()
